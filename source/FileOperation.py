@@ -2,7 +2,7 @@ import os
 
 
 class FileOperation:
-    os.makedirs("resources")
+    os.makedirs("resources", exist_ok=True)
     credentials_file_path = "resources/credentials.txt"
     chats_file_path = "resources/chats.txt"
     forward_config_file_path = "resources/forwardConfig.txt"

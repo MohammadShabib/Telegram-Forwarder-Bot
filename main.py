@@ -17,17 +17,16 @@ async def main():
             exit()
         if choice == "1":
             os.system("cls")
-            telegram.read_config(False)
+            telegram.client.disconnect()
+            api_id, api_hash, phone_number = Telegram.read_config(True)
+            telegram = Telegram(api_id, api_hash, phone_number)
         elif choice == "2":
             os.system("cls")
             await telegram.list_chats()
-            telegram = Telegram(api_id, api_hash, phone_number)
         elif choice == "3":
-            os.system("cls")
             print("1. Use old forward configuration.")
             print("2. new update configuration")
             choice = input("Enter your choice: ")
-            os.system("cls")
             use_old = True
             if (choice == "2"):
                 use_old = False
