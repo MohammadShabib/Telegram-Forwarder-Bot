@@ -54,10 +54,16 @@ class Bot:
         forwardConfigList = await ForwardConfig.getAll(True)
         forward_options = [
             {
-                "name": f"Use saved settings.\n     {'\n     '.join(str(forwardConfig) for forwardConfig in forwardConfigList)} \n ",
-                "value": "1"},
-            {"name": "New settings", "value": "2"}
+                "name": f"""Use saved settings.\n   {'\n   '.join(str(forwardConfig) for forwardConfig in forwardConfigList)}
+             """,
+                "value": "1"
+            },
+            {
+                "name": "New settings",
+                "value": "2"
+            }
         ]
+
         forward_choice = await inquirer.select(
             message="Forward Settings:",
             choices=forward_options
