@@ -52,10 +52,10 @@ class Bot:
 
     async def start_forward(self):
         forwardConfigList = await ForwardConfig.getAll(True)
+        forwardConfigString =  '\n   '.join(str(forwardConfig) for forwardConfig in forwardConfigList)
         forward_options = [
             {
-                "name": f"""Use saved settings.\n   {'\n   '.join(str(forwardConfig) for forwardConfig in forwardConfigList)}
-             """,
+                "name": "Use saved settings.\n   " + forwardConfigString,
                 "value": "1"
             },
             {
