@@ -22,7 +22,7 @@ class Telegram:
             messages = await self.client.get_messages(forwardConfig.sourceID, min_id=last_message_id, limit=None)
             for message in reversed(messages):
                 await self.forward_message(forwardConfig.destinationID, message)
-                print(f"Message forwarded: {message.text}")
+                print(f"Message forwarded: {message.text}. From: {forwardConfig.sourceName}. To: {forwardConfig.destinationName}.")
                 last_message_id = max(last_message_id, message.id)
             await asyncio.sleep(forwardConfig.delay)
 

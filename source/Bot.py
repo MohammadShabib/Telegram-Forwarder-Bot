@@ -1,3 +1,5 @@
+import asyncio
+
 from InquirerPy import inquirer
 from pygments.formatters import terminal
 
@@ -49,11 +51,10 @@ class Bot:
         await self.telegram.list_chats()
 
     async def start_forward(self):
-        forwardConfig = ForwardConfig()
-        forwardConfig = await forwardConfig.get(True)
+        forwardConfigList = await ForwardConfig.getAll(True)
         forward_options = [
             {
-                "name": f"Use saved settings.\n    From: {forwardConfig.sourceName} \n    To: {forwardConfig.destinationName}",
+                "name": f"Use saved settings.\n     {'\n     '.join(str(forwardConfig) for forwardConfig in forwardConfigList)} \n ",
                 "value": "1"},
             {"name": "New settings", "value": "2"}
         ]
@@ -63,6 +64,8 @@ class Bot:
         ).execute_async()
 
         if forward_choice == "2":
-            forwardConfig = await ForwardConfig.get(False)
+            forwardConfigList = await ForwardConfig.getAll(False)
 
-        await self.telegram.start_forward(forwardConfig)
+        tasks = [self.telegram.start_forward(forwardConfig) for forwardConfig in forwardConfigList]
+        await asyncio.gather(*tasks)
+
