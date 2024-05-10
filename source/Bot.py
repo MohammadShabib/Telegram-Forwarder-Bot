@@ -22,24 +22,30 @@ class Bot:
     console = Terminal.console
 
     async def start(self):
-        while True:
-            choice = await inquirer.select(
-                message="Menu:",
-                choices=Bot.options).execute_async()
-            if choice == "0":
-                Terminal.console.print("[bold red]Exiting...[/bold red]")
-                break
-            elif choice == "1":
-                await self.update_credentials()
+        try:
+            while True:
+                choice = await inquirer.select(
+                    message="Menu:",
+                    choices=Bot.options).execute_async()
+                if choice == "0":
+                    Terminal.console.print("[bold red]Exiting...[/bold red]")
+                    break
+                elif choice == "1":
+                    await self.update_credentials()
 
-            if choice == "2":
-                await self.list_chats()
+                if choice == "2":
+                    await self.list_chats()
 
-            elif choice == "3":
-                await self.start_forward()
+                elif choice == "3":
+                    await self.start_forward()
 
-            else:
-                self.console.print("[bold red]Invalid choice[/bold red]")
+                else:
+                    self.console.print("[bold red]Invalid choice[/bold red]")
+        except Exception as err:
+            raise err
+        finally:
+            self.telegram.client.disconnect()
+
 
     async def update_credentials(self):
         self.console.clear()
@@ -52,7 +58,7 @@ class Bot:
 
     async def start_forward(self):
         forwardConfigList = await ForwardConfig.getAll(True)
-        forwardConfigString =  '\n   '.join(str(forwardConfig) for forwardConfig in forwardConfigList)
+        forwardConfigString = '\n   '.join(str(forwardConfig) for forwardConfig in forwardConfigList)
         forward_options = [
             {
                 "name": "Use saved settings.\n   " + forwardConfigString,
@@ -74,4 +80,3 @@ class Bot:
 
         tasks = [self.telegram.start_forward(forwardConfig) for forwardConfig in forwardConfigList]
         await asyncio.gather(*tasks)
-
