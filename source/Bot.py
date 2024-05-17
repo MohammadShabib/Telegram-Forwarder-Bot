@@ -1,5 +1,3 @@
-import asyncio
-
 from InquirerPy import inquirer
 
 from source.telegram.Telegram import Telegram
@@ -45,7 +43,6 @@ class Bot:
         finally:
             self.telegram.client.disconnect()
 
-
     async def update_credentials(self):
         self.console.clear()
         self.telegram.client.disconnect()
@@ -56,8 +53,8 @@ class Bot:
         await self.telegram.list_chats()
 
     async def start_forward(self):
-        forwardConfigList = await ForwardConfig.getAll(True)
-        forwardConfigString = '\n   '.join(str(forwardConfig) for forwardConfig in forwardConfigList)
+        forward_config_list = await ForwardConfig.get_all(True)
+        forwardConfigString = '\n   '.join(str(forwardConfig) for forwardConfig in forward_config_list)
         forward_options = [
             {
                 "name": "Use saved settings.\n   " + forwardConfigString,
@@ -75,7 +72,7 @@ class Bot:
         ).execute_async()
 
         if forward_choice == "2":
-            forwardConfigList = await ForwardConfig.getAll(False)
+            forward_config_list = await ForwardConfig.get_all(False)
 
-        forwardConfigMap = {item.sourceID: item for item in forwardConfigList}
-        await self.telegram.start_forward(forwardConfigMap)
+        forward_config_map = {item.sourceID: item for item in forward_config_list}
+        await self.telegram.start_forward(forward_config_map)

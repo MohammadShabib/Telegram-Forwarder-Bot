@@ -1,6 +1,3 @@
-import asyncio
-import os
-import logging
 from telethon.sync import TelegramClient
 from source.model.Chat import Chat
 from source.telegram.Forward import Forward
@@ -18,9 +15,9 @@ class Telegram:
         chats = await self.client.get_dialogs()
         Chat.write(chats)
 
-    async def start_forward(self, forwardConfig):
+    async def start_forward(self, forward_config):
         await self.__connect()
-        Forward(self.client, forwardConfig)
+        Forward(self.client, forward_config)
         await self.client.run_until_disconnected()
 
     async def __connect(self):

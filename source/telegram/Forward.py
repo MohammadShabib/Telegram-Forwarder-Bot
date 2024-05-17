@@ -13,14 +13,20 @@ class Forward:
         self.client.add_event_handler(self.album_handler, events.Album(chats=list(forward_config_map.keys())))
 
     async def message_handler(self, event):
-        if event.grouped_id:
-            return
-        destination_id = self.forward_config_map.get(event.chat_id).destinationID
-        await self.send_message(destination_id, event.message)
+        try:
+            if event.grouped_id:
+                return
+            destination_id = self.forward_config_map.get(event.chat_id).destinationID
+            await self.send_message(destination_id, event.message)
+        except Exception as e:
+            print(e)
 
     async def album_handler(self, event):
-        destination_id = self.forward_config_map.get(event.chat_id).destinationID
-        await self.send_album(destination_id, event)
+        try:
+            destination_id = self.forward_config_map.get(event.chat_id).destinationID
+            await self.send_album(destination_id, event)
+        except Exception as e:
+            print(e)
 
     async def send_message(self, destination_channel_id, message):
         media_path = None
@@ -34,6 +40,7 @@ class Forward:
             await self.client.send_message(destination_channel_id, text)
 
     async def send_album(self, destination_channel_id, event):
+        # TODO: ADD compression flag
         media_path_list = []
         for message in event.messages:
             if message.media:
@@ -50,5 +57,6 @@ class Forward:
         file_path = await self.client.download_media(message, file=MEDIA_FOLDER_PATH)
         return file_path
 
-    def delete_media(self, media_path):
+    @staticmethod
+    def delete_media(media_path):
         os.remove(media_path)

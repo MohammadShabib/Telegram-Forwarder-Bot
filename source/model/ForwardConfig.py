@@ -8,16 +8,16 @@ from source.utils.Utilities import Utilities
 
 class ForwardConfig:
 
-    def __init__(self, sourceID=None, sourceName=None, destinationID=None, destinationName=None):
-        self.sourceID = sourceID
-        self.sourceName = sourceName
-        self.destinationID = destinationID
-        self.destinationName = destinationName
+    def __init__(self, source_id=None, source_name=None, destination_id=None, destination_name=None):
+        self.sourceID = source_id
+        self.sourceName = source_name
+        self.destinationID = destination_id
+        self.destinationName = destination_name
 
     @staticmethod
-    def write(forwardConfigList):
+    def write(forward_config_list):
         forwardList = []
-        for _ in forwardConfigList:
+        for _ in forward_config_list:
             forwardList.append(_.__dict__)
         with open(FORWARD_CONFIG_FILE_PATH, "w") as file:
             json.dump(forwardList, file, indent=4)
@@ -36,7 +36,7 @@ class ForwardConfig:
         while True:
             forwardConfig = ForwardConfig()
             sourceChoice = await Utilities.list_chats_terminal(chats, "source")
-            if (sourceChoice == -1):
+            if sourceChoice == -1:
                 break
             source = chats[sourceChoice]
             forwardConfig.sourceID = source.id
@@ -52,11 +52,11 @@ class ForwardConfig:
         return forwardConfigList
 
     @staticmethod
-    async def getAll(is_saved=True):
+    async def get_all(is_saved=True):
         if is_saved and os.path.exists(FORWARD_CONFIG_FILE_PATH):
             return ForwardConfig.read()
         else:
             return await ForwardConfig.scan()
 
     def __repr__(self):
-        return (f'sourceName= "{self.sourceName}", destinationName= "{self.destinationName}"')
+        return f'sourceName= "{self.sourceName}", destinationName= "{self.destinationName}"'

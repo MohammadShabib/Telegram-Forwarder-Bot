@@ -9,7 +9,8 @@ from source.utils.Constants import SESSION_FOLDER_PATH, RESOURCE_FILE_PATH, MEDI
 
 console = Terminal.console
 
-
+#TODO Add documentation
+#TODO Add logging
 async def shutdown(loop, signal=None):
     if signal:
         print(f"Received exit signal {signal.name}...")
