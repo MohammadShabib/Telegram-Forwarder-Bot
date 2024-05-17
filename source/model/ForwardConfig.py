@@ -8,11 +8,11 @@ from source.utils.Utilities import Utilities
 
 class ForwardConfig:
 
-    def __init__(self, source_id=None, source_name=None, destination_id=None, destination_name=None):
-        self.sourceID = source_id
-        self.sourceName = source_name
-        self.destinationID = destination_id
-        self.destinationName = destination_name
+    def __init__(self, sourceID=None, sourceName=None, destinationID=None, destinationName=None):
+        self.sourceID = sourceID
+        self.sourceName = sourceName
+        self.destinationID = destinationID
+        self.destinationName = destinationName
 
     @staticmethod
     def write(forward_config_list):
