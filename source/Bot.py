@@ -1,9 +1,8 @@
 import asyncio
 
 from InquirerPy import inquirer
-from pygments.formatters import terminal
 
-from source.Telegram import Telegram
+from source.telegram.Telegram import Telegram
 from source.model.Credentials import Credentials
 from source.model.ForwardConfig import ForwardConfig
 from source.utils.Console import Terminal
@@ -78,5 +77,5 @@ class Bot:
         if forward_choice == "2":
             forwardConfigList = await ForwardConfig.getAll(False)
 
-        tasks = [self.telegram.start_forward(forwardConfig) for forwardConfig in forwardConfigList]
-        await asyncio.gather(*tasks)
+        forwardConfigMap = {item.sourceID: item for item in forwardConfigList}
+        await self.telegram.start_forward(forwardConfigMap)
