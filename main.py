@@ -23,6 +23,7 @@ async def shutdown(loop, signal=None):
 
 def main():
     os.makedirs("resources", exist_ok=True)
+    os.makedirs("sessions", exist_ok=True)
     bot = Bot()
     try:
         loop = asyncio.get_event_loop()

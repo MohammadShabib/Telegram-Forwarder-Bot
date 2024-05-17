@@ -1,15 +1,13 @@
 import asyncio
 import os
-
+import logging
 from telethon.sync import TelegramClient
-
 from source.model.Chat import Chat
-
 
 class Telegram:
     def __init__(self, credentials):
         self.credentials = credentials
-        self.client = TelegramClient('session_' + credentials.phone_number, credentials.api_id, credentials.api_hash)
+        self.client = TelegramClient('sessions/session_' + credentials.phone_number, credentials.api_id, credentials.api_hash)
 
     async def list_chats(self):
         await self.__connect()
@@ -44,9 +42,7 @@ class Telegram:
 
     async def __connect(self):
         await self.client.connect()
-        if not await self.client.is_user_authorized():
-            await self.client.send_code_request(self.credentials.phone_number)
-            await self.client.sign_in(self.credentials.phone_number, input('Enter the login code: '))
+        await self.client.start(self.credentials.phone_number)
 
     async def download_media(self, message):
         download_folder = 'media'
