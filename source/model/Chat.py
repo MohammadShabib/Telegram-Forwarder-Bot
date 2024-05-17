@@ -1,8 +1,9 @@
 import json
 
+from source.utils.Constants import CHAT_FILE_PATH
+
 
 class Chat:
-    file_path = "resources/chats.json"
 
     def __init__(self, id=None, title=None, type=None):
         self.id = id
@@ -29,11 +30,11 @@ class Chat:
             print(f"Chat ID: {chat.id}, Title: {chat.title}, Type: {chat_type}")
             chats_list.append(chat_dict)
 
-        with open(Chat.file_path, "w") as chats_file:
+        with open(CHAT_FILE_PATH, "w") as chats_file:
             json.dump(chats_list, chats_file, indent=4)
 
     @staticmethod
     def read():
-        with open(Chat.file_path, "r") as chats_file:
+        with open(CHAT_FILE_PATH, "r") as chats_file:
             chats_list = json.load(chats_file)
         return [Chat(**chat) for chat in chats_list]

@@ -5,6 +5,7 @@ import sys
 
 from source.Bot import Bot
 from source.utils.Console import Terminal
+from source.utils.Constants import SESSION_FOLDER_PATH, RESOURCE_FILE_PATH, MEDIA_FOLDER_PATH
 
 console = Terminal.console
 
@@ -22,8 +23,9 @@ async def shutdown(loop, signal=None):
 
 
 def main():
-    os.makedirs("resources", exist_ok=True)
-    os.makedirs("sessions", exist_ok=True)
+    os.makedirs(RESOURCE_FILE_PATH, exist_ok=True)
+    os.makedirs(MEDIA_FOLDER_PATH, exist_ok=True)
+    os.makedirs(SESSION_FOLDER_PATH, exist_ok=True)
     bot = Bot()
     try:
         loop = asyncio.get_event_loop()

@@ -1,10 +1,10 @@
 import json
 import os.path
-from dataclasses import dataclass, field, asdict
+
+from source.utils.Constants import CREDENTIALS_FILE_PATH
 
 
 class Credentials:
-    file_path = "resources/credentials.json"
 
     def __init__(self, api_id=None, api_hash=None, phone_number=None):
         self.api_id = api_id
@@ -12,12 +12,12 @@ class Credentials:
         self.phone_number = phone_number
 
     def write(self):
-        with open(self.file_path, "w") as file:
+        with open(CREDENTIALS_FILE_PATH, "w") as file:
             json.dump(self.__dict__, file, indent=4)
 
     @staticmethod
     def read():
-        with open(Credentials.file_path, "r") as file:
+        with open(CREDENTIALS_FILE_PATH, "r") as file:
             data = json.load(file)
             return Credentials(**data)
 
@@ -32,7 +32,7 @@ class Credentials:
 
     @staticmethod
     def get(is_saved=False):
-        if is_saved and os.path.exists(Credentials.file_path):
+        if is_saved and os.path.exists(CREDENTIALS_FILE_PATH):
             return Credentials.read()
         else:
             return Credentials.scan()

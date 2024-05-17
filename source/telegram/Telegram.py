@@ -4,12 +4,13 @@ import logging
 from telethon.sync import TelegramClient
 from source.model.Chat import Chat
 from source.telegram.Forward import Forward
+from source.utils.Constants import SESSION_PREFIX_PATH
 
 
 class Telegram:
     def __init__(self, credentials):
         self.credentials = credentials
-        self.client = TelegramClient('sessions/session_' + credentials.phone_number, credentials.api_id,
+        self.client = TelegramClient(SESSION_PREFIX_PATH + credentials.phone_number, credentials.api_id,
                                      credentials.api_hash)
 
     async def list_chats(self):

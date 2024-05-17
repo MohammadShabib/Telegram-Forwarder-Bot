@@ -2,6 +2,8 @@ import os
 
 from telethon import events
 
+from source.utils.Constants import MEDIA_FOLDER_PATH
+
 
 class Forward:
     def __init__(self, client, forward_config_map):
@@ -42,11 +44,10 @@ class Forward:
             self.delete_media(media_path)
 
     async def download_media(self, message):
-        download_folder = 'media'
-        if not os.path.exists(download_folder):
-            os.makedirs(download_folder)
+        if not os.path.exists(MEDIA_FOLDER_PATH):
+            os.makedirs(MEDIA_FOLDER_PATH)
 
-        file_path = await self.client.download_media(message, file=download_folder)
+        file_path = await self.client.download_media(message, file=MEDIA_FOLDER_PATH)
         return file_path
 
     def delete_media(self, media_path):
