@@ -73,6 +73,27 @@ class Bot:
 
         if forward_choice == "2":
             forward_config_list = await ForwardConfig.get_all(False)
-
         forward_config_map = {item.sourceID: item for item in forward_config_list}
-        await self.telegram.start_forward(forward_config_map)
+
+        forward_type = [
+            {
+                "name": "Live",
+                "value": "1"
+            },
+            {
+                "name": "Past",
+                "value": "2"
+            }
+        ]
+
+        type_choice = await inquirer.select(
+            message="Forward Type:",
+            choices=forward_type
+        ).execute_async()
+
+        if type_choice == "1":
+            await self.telegram.start_forward(forward_config_map)
+        else:
+            await self.telegram.past(forward_config_map)
+
+

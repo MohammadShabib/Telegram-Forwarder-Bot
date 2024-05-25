@@ -17,8 +17,14 @@ class Telegram:
 
     async def start_forward(self, forward_config):
         await self.__connect()
-        Forward(self.client, forward_config)
+        forward = Forward(self.client, forward_config)
+        forward.add_events()
         await self.client.run_until_disconnected()
+
+    async def past(self, forward_config):
+        await self.__connect()
+        forward = Forward(self.client, forward_config)
+        await forward.forward_all_history()
 
     async def __connect(self):
         await self.client.connect()
