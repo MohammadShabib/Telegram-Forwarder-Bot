@@ -12,8 +12,8 @@ from source.dialog.FindUserDialog import FindUserDialog
 
 class Bot:
     def __init__(self):
-        self.telegram = Telegram(Credentials.get(True))
         self.console = Terminal.console
+        self.telegram = None
         self.menu_options = self._init_menu_options()
         self.forward_dialog = ForwardDialog()
         self.delete_dialog = DeleteDialog()
@@ -30,8 +30,37 @@ class Bot:
             {"name": "Exit", "value": "0", "handler": None}
         ]
 
+    async def select_account(self):
+        credentials_list = Credentials.get_all()
+        
+        choices = [
+            {
+                "name": f"Account: {cred.phone_number}",
+                "value": cred
+            } for cred in credentials_list
+        ]
+        
+        # Add the "New Account" option
+        choices.append({
+            "name": "➕ Add New Account",
+            "value": "new"
+        })
+        
+        selected = await inquirer.select(
+            message="Select account to use:",
+            choices=choices
+        ).execute_async()
+        
+        if selected == "new":
+            credentials = Credentials.get(False)  # Get new credentials from user
+            self.telegram = Telegram(credentials)
+        else:
+            self.telegram = Telegram(selected)
+
     async def start(self):
         try:
+            await self.select_account()
+            
             while True:
                 choice = await self._get_menu_choice()
                 if choice == "0":
@@ -46,7 +75,8 @@ class Bot:
         except Exception as err:
             raise err
         finally:
-            await self._cleanup()
+            if self.telegram:
+                await self._cleanup()
 
     async def _get_menu_choice(self):
         choices = [{"name": opt["name"], "value": opt["value"]} for opt in self.menu_options]
