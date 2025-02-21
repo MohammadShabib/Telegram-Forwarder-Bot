@@ -23,9 +23,10 @@ class Bot:
         return [
             {"name": "Add/Update Credentials", "value": "1", "handler": self.update_credentials},
             {"name": "List Chats", "value": "2", "handler": self.list_chats},
-            {"name": "Forward Messages", "value": "3", "handler": self.start_forward},
-            {"name": "Delete My Messages", "value": "4", "handler": self.delete_messages},
-            {"name": "Find User Messages", "value": "5", "handler": self.find_user},
+            {"name": "Live Forward Messages", "value": "3", "handler": self.live_forward},
+            {"name": "Past Forward Messages", "value": "4", "handler": self.past_forward},
+            {"name": "Delete My Messages", "value": "5", "handler": self.delete_messages},
+            {"name": "Find User Messages", "value": "6", "handler": self.find_user},
             {"name": "Exit", "value": "0", "handler": None}
         ]
 
@@ -63,16 +64,13 @@ class Bot:
         self.console.clear()
         await self.telegram.list_chats()
 
-    async def start_forward(self):
-        config_result = await self.forward_dialog.get_config()
-        if not config_result:
-            return
-        
-        config, forward_type = config_result
-        if forward_type == "1":
-            await self.telegram.start_forward(config)
-        else:
-            await self.telegram.past(config)
+    async def live_forward(self):
+        config = await self.forward_dialog.get_config()
+        await self.telegram.start_forward(config[0])
+
+    async def past_forward(self):
+        config = await self.forward_dialog.get_config()
+        await self.telegram.past(config[0])
 
     async def delete_messages(self):
         ignore_chats = await self.delete_dialog.get_config()
