@@ -3,7 +3,7 @@ import os
 import signal
 import sys
 
-from source.Bot import Bot
+from source.core.Bot import Bot
 from source.utils.Console import Terminal
 from source.utils.Constants import SESSION_FOLDER_PATH, RESOURCE_FILE_PATH, MEDIA_FOLDER_PATH
 

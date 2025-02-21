@@ -3,7 +3,7 @@ import os.path
 
 from source.model.Chat import Chat
 from source.utils.Constants import FORWARD_CONFIG_FILE_PATH
-from source.utils.Utilities import Utilities
+from source.dialog.BaseDialog import BaseDialog
 
 
 class ForwardConfig:
@@ -33,16 +33,18 @@ class ForwardConfig:
         chat = Chat()
         chats = chat.read()
         forwardConfigList = []
+        dialog = BaseDialog()
+        
         while True:
             forwardConfig = ForwardConfig()
-            sourceChoice = await Utilities.list_chats_terminal(chats, "source")
+            sourceChoice = await dialog.list_chats_terminal(chats, "source")
             if sourceChoice == -1:
                 break
             source = chats[sourceChoice]
             forwardConfig.sourceID = source.id
             forwardConfig.sourceName = source.title
 
-            destinationChoice = await Utilities.list_chats_terminal(chats, "destination")
+            destinationChoice = await dialog.list_chats_terminal(chats, "destination")
             destination = chats[destinationChoice]
             forwardConfig.destinationID = destination.id
             forwardConfig.destinationName = destination.title

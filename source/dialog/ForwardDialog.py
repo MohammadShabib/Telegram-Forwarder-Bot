@@ -3,15 +3,20 @@ from source.model.ForwardConfig import ForwardConfig
 
 class ForwardDialog(BaseDialog):
     async def get_config(self):
-        self.clear()
-        config = await self._get_forward_config()
-        if not config:
-            return None
+        """Get forward configuration from user.
         
-        forward_type = await self._get_forward_type()
-        return config, forward_type
+        Returns:
+            Dict mapping source chat IDs to their forward configurations
+        """
+        self.clear()
+        return await self._get_forward_config()
 
     async def _get_forward_config(self):
+        """Get forward configuration settings.
+        
+        Returns:
+            Dict mapping source chat IDs to their forward configurations
+        """
         forward_config_list = await ForwardConfig.get_all(True)
         config_string = '\n   '.join(str(config) for config in forward_config_list)
         
@@ -24,11 +29,4 @@ class ForwardDialog(BaseDialog):
         if choice == "2":
             forward_config_list = await ForwardConfig.get_all(False)
         
-        return {item.sourceID: item for item in forward_config_list}
-
-    async def _get_forward_type(self):
-        options = [
-            {"name": "Live", "value": "1"},
-            {"name": "Past", "value": "2"}
-        ]
-        return await self.show_options("Forward Type:", options) 
+        return {item.sourceID: item for item in forward_config_list} 

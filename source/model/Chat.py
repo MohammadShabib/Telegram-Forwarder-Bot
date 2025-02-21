@@ -2,7 +2,7 @@ import json
 import os
 
 from source.utils.Constants import CHAT_FILE_PATH, IGNORE_CHATS_FILE_PATH, WANTED_USER_FILE_PATH
-from source.utils.Utilities import Utilities
+from source.dialog.BaseDialog import BaseDialog
 
 
 class Chat:
@@ -33,11 +33,11 @@ class Chat:
                 "type": chat_type,
                 "username": username
             }
-            print(f"Chat ID: {chat.id}, Title: {chat.title}, Type: {chat_type}")
             chats_list.append(chat_dict)
 
         with open(CHAT_FILE_PATH, "w") as chats_file:
             json.dump(chats_list, chats_file, indent=4)
+        return chats_list
 
     @staticmethod
     def read():
@@ -71,8 +71,10 @@ class Chat:
     async def scan_ignore_chats():
         chats = Chat.read()
         ignore_list = []
+        dialog = BaseDialog()
+        
         while True:
-            choice = await Utilities.list_chats_terminal(chats, "ignore")
+            choice = await dialog.list_chats_terminal(chats, "ignore")
             if choice == -1:
                 break
             ignore_list.append(chats[choice])
@@ -82,7 +84,8 @@ class Chat:
     @staticmethod
     async def scan_wanted_user():
         chats = Chat.read()
-        choice = await Utilities.list_chats_terminal(chats, "target")
+        dialog = BaseDialog()
+        choice = await dialog.list_chats_terminal(chats, "target")
         if choice == -1:
             return None
         wanted_user = chats[choice]
@@ -102,3 +105,42 @@ class Chat:
             return Chat.read_wanted_user()
         else:
             return await Chat.scan_wanted_user()
+
+    def get_display_name(self):
+        """Returns a standardized display string for the chat with Rich formatting"""
+        type_color = {
+            "Channel": "cyan",
+            "Group": "green",
+            "User": "yellow",
+            "UNKNOWN": "red"
+        }.get(self.type, "white")
+
+        # Pad all fields to fixed widths
+        type_padded = f"Type: {self.type:<10}"
+        id_padded = f"ID: {self.id:<15}"
+        username_padded = f"Username: {self.username if self.username else '':<30}"
+        title_padded = f"Title: {self.title:<100}"
+        
+        display_parts = [
+            f"[{type_color}]{type_padded}[/]",
+            f"[dim]{id_padded}[/]",
+            f"[blue]{username_padded}[/]",
+            f"[bold]{title_padded}[/]"
+        ]
+        return " | ".join(display_parts)
+
+    def get_plain_display_name(self):
+        """Returns a plain text version without Rich formatting"""
+        # Pad all fields to fixed widths
+        type_padded = f"Type: {self.type:<10}"
+        id_padded = f"ID: {self.id:<15}"
+        username_padded = f"Username: {self.username if self.username else '':<30}"
+        title_padded = f"Title: {self.title:<100}"
+        
+        display_parts = [
+            type_padded,
+            id_padded,
+            username_padded,
+            title_padded
+        ]
+        return " | ".join(display_parts)
