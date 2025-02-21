@@ -1,53 +1,94 @@
 # Telegram Forwarder Bot
 
-The Telegram Forwarder Bot is a Python-based tool that automates the forwarding of messages from one Telegram chat to
-another. This is particularly useful for managing information flow in channels, groups, or personal messages based on
-specific keywords.
+A powerful Python-based Telegram bot that enables automated message forwarding between chats, message deletion, and user tracking capabilities. Built with the Telethon library for reliable Telegram API interaction.
 
 ## Features
 
-- **Compatibility**: Supports groups, channels, and personal chats.
-- **Keyword Filtering**: Automatically forwards messages containing designated keywords.
-- **Telethon Library**: Utilizes the Telethon library to interact with the Telegram API efficiently.
-
-## How It Works
-
-The bot authenticates using your Telegram API ID, API hash, and phone number. You can configure the source and
-destination chats, as well as set keywords that trigger the forwarding of messages. The bot operates continuously,
-scanning for and forwarding messages based on your specified criteria.
+- **Multi-Account Support**: Manage multiple Telegram accounts
+- **Flexible Forwarding**:
+  - Forward messages between any combination of groups, channels, and private chats
+  - Support for all message types (text, media, documents, etc.)
+  - Maintain reply chains when forwarding
+  - Live forwarding of new messages
+  - Historical message forwarding
+- **Message Management**:
+  - Bulk message deletion
+  - Media downloading
+  - User message tracking
+- **Rich Console Interface**:
+  - Interactive chat selection
+  - Progress tracking
+  - Colorized output
+- **Persistent Configuration**:
+  - Save forwarding settings
+  - Store chat lists
+  - Track message history
 
 ## Prerequisites
 
-Ensure that Python 3 is installed on your system.
+- Python 3.7 or higher
+- Telegram API credentials (api_id and api_hash)
+- A Telegram account
 
-## Setup and Usage
+## Installation
 
-1. Make sure to have Python3
-2. Download the code or clone the repository:
-
+1. Clone the repository:
    ```bash
    git clone https://github.com/MohammadShabib/Telegram-Forwarder-Bot.git
    cd Telegram-Forwarder-Bot
    ```
 
-3. Install the required dependencies:
-
+2. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
+3. Create required directories:
+   ```bash
+   mkdir -p resources sessions media
+   ```
 
-4. Run the script:
+## Configuration
 
+1. Get your Telegram API credentials:
+   - Visit https://my.telegram.org/apps
+   - Create a new application
+   - Note your `api_id` and `api_hash`
+
+2. First Run:
    ```bash
    python main.py
    ```
-5. Choose an option:
+   - You'll be prompted to enter your API credentials
+   - Verify your phone number
+   - Credentials will be saved for future use
 
-   - Update Config: Set up or update your Telegram API credentials.
-   - List Chat: Display a list of all chats available for forwarding.
-   - Forward Messages: Configure the source and destination chat IDs, set a forwarding delay, and specify keywords.
-   
+## Usage
+
+The bot provides several key functions through an interactive menu:
+
+### 1. Account Management
+- Switch between multiple Telegram accounts
+- Add new accounts
+- Update existing credentials
+
+### 2. Chat Operations
+- List available chats
+- Configure source and destination chats for forwarding
+- Set up ignore lists for specific chats
+
+### 3. Forwarding
+- **Live Forward**: Forward new messages as they arrive
+- **Past Forward**: Forward existing messages from history
+- Messages maintain their original formatting and media
+
+### 4. Message Management
+- Delete messages in bulk from specific chats
+- Track and download media from specific users
+- Search for user messages across chats
+
+## Project Structure
+
 ## Data Directory
 Configuration files and other data are stored in the  ```resources ``` folder.
 
