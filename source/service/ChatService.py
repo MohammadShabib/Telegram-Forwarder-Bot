@@ -1,9 +1,13 @@
 from source.utils.Console import Terminal
 import telethon
+from datetime import datetime
+import pytz
+from typing import Optional
 
 class ChatService:
     def __init__(self, console=None):
         self.console = console or Terminal.console
+        self.local_timezone = datetime.now().astimezone().tzinfo
 
     @staticmethod
     def get_chat_name(chat):
@@ -40,14 +44,29 @@ class ChatService:
         except Exception:
             return "💬 Chat"
 
-    def print_chat_info(self, chat, message=None):
+    def format_date(self, date: datetime) -> str:
+        """Format date in local timezone.
+        
+        Args:
+            date: UTC datetime object
+            
+        Returns:
+            str: Formatted date string in local timezone
+        """
+        if date.tzinfo is None:  # If naive datetime, assume UTC
+            date = date.replace(tzinfo=pytz.UTC)
+        local_date = date.astimezone(self.local_timezone)
+        return local_date.strftime("%Y-%m-%d %H:%M:%S %Z")
+
+    def print_chat_info(self, chat, message: Optional[telethon.tl.custom.Message] = None):
         """Print formatted chat information."""
         chat_name = self.get_chat_name(chat)
         chat_type = self.get_chat_type(chat)
         
         self.console.print(f"[bold blue]{chat_type}[/bold blue]: [yellow]{chat_name}[/yellow]")
         if message:
-            self.console.print(f"[dim]Date:[/dim] [cyan]{message.date}[/cyan]")
+            local_date = self.format_date(message.date)
+            self.console.print(f"[dim]Date:[/dim] [cyan]{local_date}[/cyan]")
             if message.text:
                 self.console.print(f"[dim]Message:[/dim] [white]{message.text}[/white]")
             if hasattr(message.peer_id, 'channel_id'):

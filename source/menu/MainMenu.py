@@ -20,10 +20,10 @@ class MainMenu:
         return [
             {"name": "Add/Update Credentials", "value": "1", "handler": self.update_credentials},
             {"name": "List Chats", "value": "2", "handler": self.list_chats},
-            {"name": "Live Forward Messages", "value": "3", "handler": self.live_forward},
-            {"name": "Past Forward Messages", "value": "4", "handler": self.past_forward},
-            {"name": "Delete My Messages", "value": "5", "handler": self.delete_messages},
-            {"name": "Find User Messages", "value": "6", "handler": self.find_user},
+            {"name": "Delete My Messages", "value": "3", "handler": self.delete_messages},
+            {"name": "Find User Messages", "value": "4", "handler": self.find_user},
+            {"name": "Live Forward Messages", "value": "5", "handler": self.live_forward},
+            {"name": "Past Forward Messages", "value": "6", "handler": self.past_forward},
             {"name": "Switch Account", "value": "7", "handler": self.switch_account},
             {"name": "Exit", "value": "0", "handler": None}
         ]

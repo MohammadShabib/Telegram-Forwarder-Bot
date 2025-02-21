@@ -76,7 +76,8 @@ class MessageService:
                         self.console.print(f"[yellow]Failed to download media: {e}[/yellow]")
 
             if message_count > 0:
-                self.console.print(f"[green]Found {message_count} messages in {self.chat_service.get_chat_name(chat)}[/green]")
+                self.console.print(
+                    f"[bold green]✨ FOUND {message_count} MESSAGES IN {self.chat_service.get_chat_name(chat).upper()}! ✨\n\n[/bold green]")
 
         except ChatAdminRequiredError:
             self.console.print(f"[yellow]No access to {self.chat_service.get_chat_name(chat)}[/yellow]")
