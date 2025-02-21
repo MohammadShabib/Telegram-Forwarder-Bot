@@ -6,15 +6,34 @@ from source.dialog.BaseDialog import BaseDialog
 
 
 class Chat:
+    """A class representing a Telegram chat entity with persistence capabilities.
+    
+    This class handles chat data management including reading/writing chat information
+    to files and managing ignore lists and wanted user configurations.
+    
+    Attributes:
+        id (int): The Telegram chat ID
+        title (str): The chat title/name
+        type (str): The type of chat (Channel, Group, User, or UNKNOWN)
+        username (str): The username associated with the chat
+    """
 
-    def __init__(self, id=None, title=None, type=None, username=None):
+    def __init__(self, id: int = None, title: str = None, type: str = None, username: str = None):
         self.id = id
         self.title = title
         self.type = type
         self.username = username
 
     @staticmethod
-    def write(chats):
+    def write(chats) -> list:
+        """Writes chat information to a file.
+        
+        Args:
+            chats: List of Telegram chat objects to persist
+            
+        Returns:
+            list: List of processed chat dictionaries
+        """
         chats_list = []
         username = None
         for chat in chats:
@@ -40,7 +59,12 @@ class Chat:
         return chats_list
 
     @staticmethod
-    def read():
+    def read() -> list['Chat']:
+        """Reads chat information from file.
+        
+        Returns:
+            list[Chat]: List of Chat objects loaded from file
+        """
         with open(CHAT_FILE_PATH, "r") as chats_file:
             chats_list = json.load(chats_file)
         return [Chat(**chat) for chat in chats_list]
@@ -68,7 +92,12 @@ class Chat:
             json.dump(chat.__dict__, user_file, indent=4)
 
     @staticmethod
-    async def scan_ignore_chats():
+    async def scan_ignore_chats() -> list['Chat']:
+        """Interactively scans for chats to ignore.
+        
+        Returns:
+            list[Chat]: List of Chat objects to ignore
+        """
         chats = Chat.read()
         ignore_list = []
         dialog = BaseDialog()
@@ -82,7 +111,12 @@ class Chat:
         return ignore_list
 
     @staticmethod
-    async def scan_wanted_user():
+    async def scan_wanted_user() -> 'Chat':
+        """Interactively scans for a wanted user.
+        
+        Returns:
+            Chat: The selected wanted user Chat object, or None if cancelled
+        """
         chats = Chat.read()
         dialog = BaseDialog()
         choice = await dialog.list_chats_terminal(chats, "target")
@@ -106,8 +140,12 @@ class Chat:
         else:
             return await Chat.scan_wanted_user()
 
-    def get_display_name(self):
-        """Returns a standardized display string for the chat with Rich formatting"""
+    def get_display_name(self) -> str:
+        """Returns a standardized display string for the chat with Rich formatting.
+        
+        Returns:
+            str: Formatted string with chat information including type, ID, username and title
+        """
         type_color = {
             "Channel": "cyan",
             "Group": "green",

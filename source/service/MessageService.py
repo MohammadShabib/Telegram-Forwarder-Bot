@@ -2,15 +2,32 @@ import os
 import telethon
 from source.utils.Constants import MEDIA_FOLDER_PATH
 from source.utils.Console import Terminal
+from typing import Optional, Any
 
 class MessageService:
-    def __init__(self, client, console=None):
+    """Service for handling Telegram message operations.
+    
+    This class provides functionality for message deletion, processing user messages,
+    and handling media downloads.
+    
+    Attributes:
+        client (TelegramClient): The Telegram client instance
+        console (Console): Rich console instance for output
+        chat_service (ChatService): Service for chat-related operations
+    """
+
+    def __init__(self, client: telethon.TelegramClient, console: Optional[Terminal] = None):
         self.client = client
         self.console = console or Terminal.console
         self.chat_service = None  # Will be set by Telegram class
 
-    async def delete_messages_from_dialog(self, dialog, my_id):
-        """Deletes user's messages from a specific dialog."""
+    async def delete_messages_from_dialog(self, dialog: telethon.Dialog, my_id: int) -> None:
+        """Deletes user's messages from a specific dialog.
+        
+        Args:
+            dialog: Telegram dialog to delete messages from
+            my_id: ID of the user whose messages should be deleted
+        """
         chat = dialog.entity
         try:
             self.console.print(f"[bold]Searching in[/bold] [blue]{self.chat_service.get_chat_name(chat)}[/blue]")
@@ -31,8 +48,16 @@ class MessageService:
         except Exception as e:
             self.console.print(f"[bold red]Error deleting messages: {e}[/bold red]")
 
-    async def process_user_messages(self, chat, user_id):
-        """Processes messages from a specific user in a chat."""
+    async def process_user_messages(self, chat: Any, user_id: int) -> None:
+        """Processes messages from a specific user in a chat.
+        
+        Downloads media and displays message information for all messages
+        from the specified user.
+        
+        Args:
+            chat: Telegram chat entity to process
+            user_id: ID of the user whose messages should be processed
+        """
         try:
             message_count = 0
             async for message in self.client.iter_messages(chat, from_user=user_id):

@@ -8,6 +8,18 @@ from source.service.MessageForwardService import MessageForwardService
 
 
 class Forward:
+    """Service class for handling message forwarding operations.
+    
+    This class manages both live message forwarding and historical message forwarding
+    between configured source and destination chats.
+    
+    Attributes:
+        client (TelegramClient): The Telegram client instance
+        forward_config_map (dict): Mapping of source chat IDs to forward configurations
+        history (HistoryService): Service for tracking message forwarding history
+        message_forward (MessageForwardService): Service for handling message forwarding operations
+    """
+
     def __init__(self, client: TelegramClient, forward_config_map: dict):
         """Initialize Forward service.
         
@@ -91,7 +103,7 @@ class Forward:
                 await self._forward_message(destination_id, message, reply_message)
                 last_message_id = max(last_message_id, message.id)
             except Exception as e:
-                print(f"Error forwarding message {message.id}: {e}")
+                print(f"Error forwarding message: {e}")
 
     def _get_destination_id(self, source_id: int) -> Optional[int]:
         """Get destination chat ID for a source chat.
