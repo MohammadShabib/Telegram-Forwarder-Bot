@@ -1,8 +1,11 @@
 import os
-import telethon
+from telethon import TelegramClient
+from telethon.tl.custom import Dialog
+from telethon.tl.types import Message, User, Chat, Channel
+from telethon.errors import ChatAdminRequiredError
 from source.utils.Constants import MEDIA_FOLDER_PATH
 from source.utils.Console import Terminal
-from typing import Optional, Any
+from typing import Optional, Union
 
 class MessageService:
     """Service for handling Telegram message operations.
@@ -16,12 +19,12 @@ class MessageService:
         chat_service (ChatService): Service for chat-related operations
     """
 
-    def __init__(self, client: telethon.TelegramClient, console: Optional[Terminal] = None):
+    def __init__(self, client: TelegramClient, console: Optional[Terminal] = None):
         self.client = client
         self.console = console or Terminal.console
         self.chat_service = None  # Will be set by Telegram class
 
-    async def delete_messages_from_dialog(self, dialog: telethon.Dialog, my_id: int) -> None:
+    async def delete_messages_from_dialog(self, dialog: Dialog, my_id: int) -> None:
         """Deletes user's messages from a specific dialog.
         
         Args:
@@ -48,14 +51,14 @@ class MessageService:
         except Exception as e:
             self.console.print(f"[bold red]Error deleting messages: {e}[/bold red]")
 
-    async def process_user_messages(self, chat: Any, user_id: int) -> None:
+    async def process_user_messages(self, chat: Union[User, Chat, Channel], user_id: int) -> None:
         """Processes messages from a specific user in a chat.
         
         Downloads media and displays message information for all messages
         from the specified user.
         
         Args:
-            chat: Telegram chat entity to process
+            chat: Telegram chat entity to process (User, Chat, or Channel)
             user_id: ID of the user whose messages should be processed
         """
         try:
@@ -75,13 +78,20 @@ class MessageService:
             if message_count > 0:
                 self.console.print(f"[green]Found {message_count} messages in {self.chat_service.get_chat_name(chat)}[/green]")
 
-        except telethon.errors.ChatAdminRequiredError:
+        except ChatAdminRequiredError:
             self.console.print(f"[yellow]No access to {self.chat_service.get_chat_name(chat)}[/yellow]")
         except Exception as e:
             if "private" not in str(e).lower() and "banned" not in str(e).lower():
                 self.console.print(f"[red]Error processing {self.chat_service.get_chat_name(chat)}: {e}[/red]")
 
-    async def download_media(self, message):
-        """Downloads media from a message."""
+    async def download_media(self, message: Message) -> Optional[str]:
+        """Downloads media from a message.
+        
+        Args:
+            message: Telegram message containing media
+            
+        Returns:
+            str: Path to downloaded media file, or None if download failed
+        """
         os.makedirs(MEDIA_FOLDER_PATH, exist_ok=True)
         return await self.client.download_media(message, file=MEDIA_FOLDER_PATH) 
