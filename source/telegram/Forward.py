@@ -67,7 +67,9 @@ class Forward:
             if message.media:
                 media_path = await self.download_media(message)
             text = message.text if message.text else ''
-            if media_path:
+            if message.forward is not None:
+                lSent_message =  await self.client.forward_messages(destination_channel_id, message)
+            elif media_path:
                 lSent_message = await self.client.send_file(destination_channel_id, media_path, caption=text,
                                                             reply_to=reply_to)
                 self.delete_media(media_path)

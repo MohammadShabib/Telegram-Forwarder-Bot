@@ -2,7 +2,7 @@
 *.session*
 
 # Credentials
-source/resources/credentials.txt
+source/resources/
 config.ini
 config.py
 
