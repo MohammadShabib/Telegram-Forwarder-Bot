@@ -76,10 +76,18 @@ class Chat:
         return [Chat(**chat) for chat in chats_list]
 
     @staticmethod
-    def read_wanted_user():
+    def read_wanted_users():
+        """Reads wanted users from file.
+        
+        Returns:
+            list[Chat]: List of Chat objects for wanted users
+        """
         with open(WANTED_USER_FILE_PATH, "r") as user_file:
-            user_data = json.load(user_file)
-        return Chat(**user_data)
+            users_data = json.load(user_file)
+            # Handle both single user (dict) and multiple users (list) formats
+            if isinstance(users_data, dict):
+                return [Chat(**users_data)]
+            return [Chat(**user) for user in users_data]
 
     @staticmethod
     def write_ignore_chats(chats_list):
@@ -87,9 +95,14 @@ class Chat:
             json.dump([chat.__dict__ for chat in chats_list], chats_file, indent=4)
 
     @staticmethod
-    def write_wanted_user(chat):
+    def write_wanted_users(chats_list):
+        """Writes wanted users to file.
+        
+        Args:
+            chats_list: List of Chat objects to save
+        """
         with open(WANTED_USER_FILE_PATH, "w") as user_file:
-            json.dump(chat.__dict__, user_file, indent=4)
+            json.dump([chat.__dict__ for chat in chats_list], user_file, indent=4)
 
     @staticmethod
     async def scan_ignore_chats() -> list['Chat']:
@@ -123,7 +136,7 @@ class Chat:
         if choice == -1:
             return None
         wanted_user = chats[choice]
-        Chat.write_wanted_user(wanted_user)
+        Chat.write_wanted_users([wanted_user])
         return wanted_user
 
     @staticmethod
@@ -136,7 +149,7 @@ class Chat:
     @staticmethod
     async def get_wanted_user(is_saved=True):
         if is_saved and os.path.exists(WANTED_USER_FILE_PATH):
-            return Chat.read_wanted_user()
+            return Chat.read_wanted_users()[0]
         else:
             return await Chat.scan_wanted_user()
 
