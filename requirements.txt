@@ -1,4 +1,4 @@
-telethon~=1.35.0
+telethon~=1.39.0
 prompt~=0.4.1
 rich~=13.7.1
 inquirerpy~=0.3.4

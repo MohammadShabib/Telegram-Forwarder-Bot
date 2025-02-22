@@ -75,8 +75,8 @@ class MainMenu:
         await self.telegram.delete(ignore_chats)
 
     async def find_user(self):
-        wanted_user = await self.find_user_dialog.get_config()
-        await self.telegram.find_user(wanted_user)
+        config = await self.find_user_dialog.get_config()
+        await self.telegram.find_user(config)
 
     async def switch_account(self):
         await self._cleanup()

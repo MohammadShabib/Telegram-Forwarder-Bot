@@ -83,8 +83,16 @@ class Telegram:
 
             await self.message_service.delete_messages_from_dialog(dialog, me.id)
 
-    async def find_user(self, wanted_user):
-        """Finds and downloads messages from a specific user."""
+    async def find_user(self, config):
+        """Finds and downloads messages from a specific user.
+        
+        Args:
+            config: tuple containing (wanted_user, message_limit)
+        """
+        wanted_user, message_limit = config
+        if not wanted_user:
+            return
+        
         me = await self.get_me()
 
         async for dialog in self.client.iter_dialogs():
@@ -96,7 +104,7 @@ class Telegram:
                 if isinstance(chat, telethon.tl.types.User):
                     continue
 
-                await self.message_service.process_user_messages(chat, wanted_user.id)
+                await self.message_service.process_user_messages(chat, wanted_user.id, message_limit)
 
             except Exception as e:
                 print(f"Error processing dialog: {e}")
