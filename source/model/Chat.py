@@ -46,11 +46,14 @@ class Chat:
                 chat_type = "User"
                 username = chat.entity.username
 
+            access_hash = chat.entity.access_hash
+
             chat_dict = {
                 "id": chat.id,
                 "title": chat.title,
                 "type": chat_type,
-                "username": username
+                "username": username,
+                "access_hash": access_hash
             }
             chats_list.append(chat_dict)
 
@@ -157,7 +160,7 @@ class Chat:
         """Returns a standardized display string for the chat with Rich formatting.
         
         Returns:
-            str: Formatted string with chat information including type, ID, username and title
+            str: Formatted string with chat information including type, ID, username, title, and access hash
         """
         type_color = {
             "Channel": "cyan",
