@@ -94,6 +94,13 @@ class Telegram:
             return
         
         me = await self.get_me()
+        
+        # Create the user entity with the access hash
+        wanted_user_entity = telethon.tl.types.User(
+            id=wanted_user.id,
+            access_hash=wanted_user.access_hash,
+            username=wanted_user.username
+        )
 
         async for dialog in self.client.iter_dialogs():
             chat = dialog.entity
@@ -104,7 +111,7 @@ class Telegram:
                 if isinstance(chat, telethon.tl.types.User):
                     continue
 
-                await self.message_service.process_user_messages(chat, wanted_user.id, message_limit)
+                await self.message_service.process_user_messages(chat, wanted_user_entity, message_limit)
 
             except Exception as e:
                 print(f"Error processing dialog: {e}")

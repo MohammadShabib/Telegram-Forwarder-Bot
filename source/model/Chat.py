@@ -18,11 +18,12 @@ class Chat:
         username (str): The username associated with the chat
     """
 
-    def __init__(self, id: int = None, title: str = None, type: str = None, username: str = None):
+    def __init__(self, id: int = None, title: str = None, type: str = None, username: str = None, access_hash: int = None):
         self.id = id
         self.title = title
         self.type = type
         self.username = username
+        self.access_hash = access_hash
 
     @staticmethod
     def write(chats) -> list:
@@ -35,7 +36,6 @@ class Chat:
             list: List of processed chat dictionaries
         """
         chats_list = []
-        username = None
         for chat in chats:
             chat_type = "UNKNOWN"
             if chat.is_channel:
@@ -44,8 +44,8 @@ class Chat:
                 chat_type = "Group"
             elif chat.is_user:
                 chat_type = "User"
-                username = chat.entity.username
 
+            username = chat.entity.username
             access_hash = chat.entity.access_hash
 
             chat_dict = {

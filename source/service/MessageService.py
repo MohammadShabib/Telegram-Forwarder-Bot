@@ -51,7 +51,7 @@ class MessageService:
         except Exception as e:
             self.console.print(f"[bold red]Error deleting messages: {e}[/bold red]")
 
-    async def process_user_messages(self, chat: Union[User, Chat, Channel], user_id: int, limit: int = None) -> None:
+    async def process_user_messages(self, chat: Union[User, Chat, Channel], wanted_user: User, limit: int = None) -> None:
         """Processes messages from a specific user in a chat.
         
         Downloads media and displays message information for messages
@@ -59,12 +59,12 @@ class MessageService:
         
         Args:
             chat: Telegram chat entity to process (User, Chat, or Channel)
-            user_id: ID of the user whose messages should be processed
+            wanted_user: User entity whose messages should be processed
             limit: Maximum number of messages to process per chat
         """
         try:
             message_count = 0
-            async for message in self.client.iter_messages(chat, from_user=user_id, limit=limit):
+            async for message in self.client.iter_messages(chat, from_user=wanted_user, limit=limit):
                 message_count += 1
                 self.chat_service.print_chat_info(chat, message)
                 
