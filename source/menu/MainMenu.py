@@ -56,7 +56,8 @@ class MainMenu:
     async def update_credentials(self):
         self.console.clear()
         await self.telegram.disconnect()
-        self.telegram = await Telegram.create(Credentials.get(False))
+        credentials = await Credentials.get(False)
+        self.telegram = await Telegram.create(credentials)
 
     async def list_chats(self):
         self.console.clear()

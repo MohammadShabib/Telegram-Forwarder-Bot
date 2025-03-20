@@ -12,7 +12,7 @@ class AccountSelector:
         
         if not credentials_list:
             self.console.print("[bold red]No credentials found. Please add credentials first.[/bold red]")
-            credentials = Credentials.get(False)
+            credentials = await Credentials.get(False)
             return await Telegram.create(credentials)
 
         choices = [
@@ -33,7 +33,7 @@ class AccountSelector:
         ).execute_async()
         
         if selected == "new":
-            credentials = Credentials.get(False)
+            credentials = await Credentials.get(False)
             return await Telegram.create(credentials)
         
         return await Telegram.create(selected) 

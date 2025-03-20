@@ -11,7 +11,7 @@ class Credentials:
         self.phone_number = phone_number
 
     @staticmethod
-    def get(use_existing=True):
+    async def get(use_existing=True):
         if use_existing and os.path.exists(Credentials.CREDENTIALS_FILE):
             with open(Credentials.CREDENTIALS_FILE, 'r') as f:
                 credentials = json.load(f)
@@ -24,7 +24,7 @@ class Credentials:
                     )
         
         # If no existing credentials or explicitly asking for new
-        new_credentials = Credentials._get_credentials_from_user()
+        new_credentials = await Credentials._get_credentials_from_user()
         Credentials._save_credentials(new_credentials.__dict__)
         return new_credentials
 
@@ -41,10 +41,10 @@ class Credentials:
         return []
 
     @staticmethod
-    def _get_credentials_from_user():
-        api_id = inquirer.text(message="Enter API ID:").execute()
-        api_hash = inquirer.text(message="Enter API Hash:").execute()
-        phone_number = inquirer.text(message="Enter Phone Number:").execute()
+    async def _get_credentials_from_user():
+        api_id = await inquirer.text(message="Enter API ID:").execute_async()
+        api_hash = await inquirer.text(message="Enter API Hash:").execute_async()
+        phone_number = await inquirer.text(message="Enter Phone Number:").execute_async()
         
         return Credentials(
             api_id=api_id,
